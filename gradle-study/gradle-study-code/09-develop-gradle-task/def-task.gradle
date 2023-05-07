@@ -1,0 +1,25 @@
+// gradle -Pprofile=def-task copy2
+// 使用任务名称字符串定义任务
+tasks.register('hello') {
+    doLast {
+        println 'hello'
+    }
+}
+
+tasks.register('copy', Copy) {
+    from(file('srcDir'))
+    into(buildDir)
+}
+
+// 使用特定于 DSL 的语法将任务分配给变量
+// Assigning registered tasks to a variable in Groovy
+def hello = tasks.register('hello2') {
+    doLast {
+        println 'hello'
+    }
+}
+
+def copy = tasks.register('copy2', Copy) {
+    from(file('srcDir'))
+    into(buildDir)
+}

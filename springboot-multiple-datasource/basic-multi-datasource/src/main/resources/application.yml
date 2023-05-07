@@ -1,0 +1,21 @@
+#spring:
+#  datasource:
+#    master:
+#      type: com.alibaba.druid.pool.DruidDataSource
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      username: root
+#      password: root
+#      url: jdbc:mysql://localhost:3306/multiple_datasource?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true
+#    slave:
+#      type: com.alibaba.druid.pool.DruidDataSource
+#        driver-class-name: com.mysql.cj.jdbc.Driver
+#        username: root
+#        password: root
+#        url: jdbc:mysql://localhost:3306/multiple_datasource2?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    #    config-location: classpath:mapper/*Mappler.xml
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

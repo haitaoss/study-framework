@@ -1,0 +1,57 @@
+// gradle -Pprofile=runtime-api processTemplatesAdHoc
+def f1 = {
+    tasks.register('processTemplatesAdHoc') {
+        // 每个方法都对应于一个增量生成注释，例如 `inputs.property()` 映射到`@Input`，`outputs.dir()` 映射到`@OutputDirectory`.
+        inputs.property('engine', TemplateEngineType.FREEMARKER)
+        inputs.files(fileTree('src/templates'))
+                .withPropertyName('sourceFiles')
+                .withPathSensitivity(PathSensitivity.RELATIVE)
+        inputs.property('templateData.name', 'docs')
+        inputs.property('templateData.variables', [year: '2013'])
+        outputs.dir(layout.buildDirectory.dir('genOutput2'))
+                .withPropertyName('outputDir')
+
+        doLast {
+            // Process the templates here
+        }
+    }
+}
+
+def f2 = {
+    // 声明可销毁的 ad-hoc task
+    tasks.register('removeTempDir') {
+        destroyables.register(layout.projectDirectory.dir('tmpDir'))
+        doLast {
+            delete(layout.projectDirectory.dir('tmpDir'))
+        }
+    }
+}
+
+def f3 = {
+    // 通过运行时 API 使用 skipWhenEmpty
+    // `TaskInputs.files()` 方法返回具有 `skipWhenEmpty()`生成器。调用此方法等效于使用`@SkipWhenEmpty`
+    tasks.register('processTemplatesAdHocSkipWhenEmpty') {
+        // ...
+
+        inputs.files(fileTree('src/templates') {
+            include '**/*.fm'
+        })
+                .skipWhenEmpty()
+                .withPropertyName('sourceFiles')
+                .withPathSensitivity(PathSensitivity.RELATIVE)
+                .ignoreEmptyDirectories()
+
+        // ...
+    }
+}
+def f4 = {
+    // 将运行时 API 与自定义任务类型结合使用
+    // ProcessTemplates 是自定义的task
+    tasks.register('processTemplatesWithExtraInputs', ProcessTemplates) {
+        // ...
+
+        inputs.file('src/headers/headers.txt')
+                .withPropertyName('headers')
+                .withPathSensitivity(PathSensitivity.NONE)
+    }
+}

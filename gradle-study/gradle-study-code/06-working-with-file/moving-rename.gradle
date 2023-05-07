@@ -1,0 +1,23 @@
+// gradle -q -Pprofile=moving-rename copyFromStaging
+// gradle -q -Pprofile=moving-rename copyWithTruncate
+
+// 复制文件时重命名文件
+tasks.register('copyFromStaging', Copy) {
+    from "test-resources/reports"
+    into layout.projectDirectory.dir('test-resources/explodedWar')
+
+    // 将 -staging 替换从空格
+    rename '(.+)-staging(.+)', '$1$2'
+}
+
+// 在复制文件名时截断文件名
+tasks.register('copyWithTruncate', Copy) {
+    from layout.projectDirectory.dir("test-resources/reports")
+    rename { String filename ->
+        if (filename.size() > 10) {
+            return filename[0..7] + "~" + filename.size()
+        } else return filename
+    }
+    into layout.projectDirectory.dir("test-resources/toArchive")
+}
+

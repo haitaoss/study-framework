@@ -1,0 +1,7 @@
+// gradle -Pprofile=add-description-to-task copy
+tasks.register('copy', Copy) {
+    description 'Copies the resource directory to the target directory.'
+    from 'resources'
+    into 'target'
+    include('**/*.txt', '**/*.xml', '**/*.properties')
+}

@@ -1,0 +1,23 @@
+// TODO 我们在这里使用*方法* `srcDir()` 来追加目录路径，而设置 `srcDirs` 属性会替换任何现有值
+// 自定义文件和目录位置
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ['test']
+        }
+    }
+}
+// 以附加方式声明自定义源目录
+sourceSets {
+    main {
+        java {
+            srcDir 'thirdParty/src/main/java'
+        }
+    }
+}

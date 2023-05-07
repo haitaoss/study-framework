@@ -1,0 +1,4 @@
+//插件版本从 `gradle.properties` 加载并在设置脚本中进行配置，允许将插件添加到任何项目中，而无需指定版本。
+plugins {
+    id 'com.example.hello'
+}

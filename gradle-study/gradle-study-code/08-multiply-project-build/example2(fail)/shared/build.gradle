@@ -1,0 +1,10 @@
+plugins {
+    id 'myproject.java-conventions'
+    id 'java-platform'
+}
+
+tasks.register('hello') {
+    doLast {
+        println name
+    }
+}

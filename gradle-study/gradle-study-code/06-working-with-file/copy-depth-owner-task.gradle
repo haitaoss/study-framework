@@ -1,0 +1,28 @@
+// 使用 copy（） 方法复制文件而不进行最新检查
+tasks.register('copyMethod') {
+    doLast {
+        copy {
+            from 'src/main/webapp'
+            into layout.buildDirectory.dir('explodedWar')
+            include '**/*.html'
+            include '**/*.jsp'
+        }
+    }
+}
+
+// 使用 copy（） 方法复制文件并进行最新检查
+tasks.register('copyMethodWithExplicitDependencies') {
+    // up-to-date check for inputs, plus add copyTask as dependency
+    inputs.files(copyTask)
+            .withPropertyName("inputs")
+            .withPathSensitivity(PathSensitivity.RELATIVE)
+    outputs.dir('some-dir') // up-to-date check for outputs
+            .withPropertyName("outputDir")
+    doLast {
+        copy {
+            // Copy the output of copyTask
+            from copyTask
+            into 'some-dir'
+        }
+    }
+}

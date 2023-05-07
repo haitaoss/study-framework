@@ -1,0 +1,30 @@
+// gradle -Pprofile=working-with-file-in-custom-tasks-and-plugins -q sayGreeting
+// 在自定义的任务和插件中处理文件
+abstract class GreetingToFileTask extends DefaultTask {
+
+    @OutputFile
+    abstract RegularFileProperty getDestination()
+
+    @TaskAction
+    def greet() {
+        def file = getDestination().get().asFile
+        file.parentFile.mkdirs()
+        file.write 'Hello!'
+    }
+}
+
+def greetingFile = objects.fileProperty()
+
+tasks.register('greet', GreetingToFileTask) {
+    destination = greetingFile
+}
+
+tasks.register('sayGreeting') {
+    dependsOn greet
+    doLast {
+        def file = greetingFile.get().asFile
+        println "${file.text} (file: ${file.name})"
+    }
+}
+
+greetingFile.set(layout.buildDirectory.file('hello.txt'))

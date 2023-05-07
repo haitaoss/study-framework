@@ -1,0 +1,57 @@
+// gradle -Pprofile=order-task
+
+// 添加 必须在以下时间之后运行"任务排序
+def f1 = {
+    def taskX = tasks.register('taskX') {
+        doLast {
+            println 'taskX'
+        }
+    }
+    def taskY = tasks.register('taskY') {
+        doLast {
+            println 'taskY'
+        }
+    }
+    taskY.configure {
+        mustRunAfter taskX
+    }
+}
+//f1() //gradle -Pprofile=order-task -q taskY taskX
+// 添加"应在以下时间之后运行"任务排序
+def f2 = {
+    def taskX = tasks.register('taskX') {
+        doLast {
+            println 'taskX'
+        }
+    }
+    def taskY = tasks.register('taskY') {
+        doLast {
+            println 'taskY'
+        }
+    }
+    taskY.configure {
+        shouldRunAfter taskX
+    }
+}
+
+// 如果引入了排序周期，则忽略"应在此之后运行"任务排序
+def f3 = {
+    def taskX = tasks.register('taskX') {
+        doLast {
+            println 'taskX'
+        }
+    }
+    def taskY = tasks.register('taskY') {
+        doLast {
+            println 'taskY'
+        }
+    }
+    def taskZ = tasks.register('taskZ') {
+        doLast {
+            println 'taskZ'
+        }
+    }
+    taskX.configure { dependsOn(taskY) }
+    taskY.configure { dependsOn(taskZ) }
+    taskZ.configure { shouldRunAfter(taskX) }
+}

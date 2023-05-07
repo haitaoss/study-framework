@@ -1,0 +1,16 @@
+// gradle -Pprofile=pass_arguments_to_constructor myTask
+abstract class CustomTask extends DefaultTask {
+    final String message
+    final int number
+
+    @Inject
+    CustomTask(String message, int number) {
+        this.message = message
+        this.number = number
+        println message
+        println number
+    }
+}
+
+// 您可以创建一个任务，在参数列表的末尾传递构造函数参数。
+tasks.register('myTask', CustomTask, 'hello', 42)

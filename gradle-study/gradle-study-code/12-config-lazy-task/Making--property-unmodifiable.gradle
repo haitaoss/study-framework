@@ -1,0 +1,8 @@
+// gradle -Pprofile=Making--property-unmodifiable -q
+def property = objects.property(String)
+property.convention("1")
+println property.get()
+//property.finalizeValue()
+property.finalizeValueOnRead()
+property.convention("2")
+println property.get()

@@ -1,0 +1,28 @@
+// 声明依赖于其他任务的任务
+
+// gradle -PbuildProfile=task-dependencies -q intro
+// gradle -PbuildProfile=task-dependencies -q taskX
+tasks.register('hello') {
+    doLast {
+        println 'Hello world!'
+    }
+}
+tasks.register('intro') {
+    dependsOn tasks.hello
+    doLast {
+        println "I'm Gradle"
+    }
+}
+
+// 可以先使用，后声明（lazy-dependencies）
+tasks.register('taskX') {
+    dependsOn 'taskY'
+    doLast {
+        println 'taskX'
+    }
+}
+tasks.register('taskY') {
+    doLast {
+        println 'taskY'
+    }
+}

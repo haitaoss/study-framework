@@ -1,0 +1,10 @@
+//apply from: "${profile}.gradle"
+
+// 核心插件 可以使用 简写
+plugins {
+    id 'java'
+}
+// 非核心插件的引用，必须指定全类名 和版本
+plugins {
+    id 'com.jfrog.bintray' version '1.8.5'
+}

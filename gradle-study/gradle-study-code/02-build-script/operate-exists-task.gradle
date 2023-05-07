@@ -1,0 +1,34 @@
+// 通过 API 访问任务 添加依赖项,通过 API 访问任务  添加行为
+
+// gradle -PbuildProfile=operate-exists-task -q task0
+// gradle -PbuildProfile=operate-exists-task -q hello
+4.times { counter ->
+    tasks.register("task$counter") {
+        doLast {
+            println "I'm task number $counter"
+        }
+    }
+}
+tasks.named('task0') { dependsOn('task2', 'task3') }
+
+
+tasks.register('hello') {
+    doLast {
+        println 'Hello Earth'
+    }
+}
+tasks.named('hello') {
+    doFirst {
+        println 'Hello Venus'
+    }
+}
+tasks.named('hello') {
+    doLast {
+        println 'Hello Mars'
+    }
+}
+tasks.named('hello') {
+    doLast {
+        println 'Hello Jupiter'
+    }
+}

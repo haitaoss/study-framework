@@ -1,0 +1,30 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+    id 'ivy-publish'
+}
+
+group 'com.example'
+version '1.0.0'
+
+gradlePlugin {
+    plugins {
+        hello {
+            id = 'com.example.hello'
+            implementationClass = 'com.example.hello.HelloPlugin'
+        }
+        goodbye {
+            id = 'com.example.goodbye'
+            implementationClass = 'com.example.goodbye.GoodbyePlugin'
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+//            url '../../consuming/maven-repo'
+            url '/opt/module/maven-3.6.3/maven_repository/'
+        }
+    }
+}

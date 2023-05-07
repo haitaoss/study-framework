@@ -1,0 +1,20 @@
+public class Download extends DefaultTask {
+    private final DirectoryProperty outputDirectory;
+
+    // Inject an ObjectFactory into the constructor
+    @Inject
+    public Download(ObjectFactory objectFactory) {
+        // Use the factory
+        outputDirectory = objectFactory.directoryProperty();
+    }
+
+    @OutputDirectory
+    public DirectoryProperty getOutputDirectory() {
+        return outputDirectory;
+    }
+
+    @TaskAction
+    void run() {
+        // ...
+    }
+}

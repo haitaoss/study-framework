@@ -1,0 +1,3 @@
+if (!hasProperty('buildProfile')) ext.buildProfile = 'default'
+
+apply from: "build-${buildProfile}.gradle"

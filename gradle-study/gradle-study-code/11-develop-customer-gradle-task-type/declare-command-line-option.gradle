@@ -1,0 +1,29 @@
+// gradle -Pprofile=declare-command-line-option -q
+import org.gradle.api.tasks.options.Option;
+
+public class UrlVerify extends DefaultTask {
+    private String url;
+
+    // @Option 标识参数的值来自命令行输入  gradle task1 --url=xxx 或者是 --url xx
+    @Option(option = "url", description = "Configures the URL to be verified.")
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Input
+    public String getUrl() {
+        return url;
+    }
+
+    @TaskAction
+    public void verify() {
+        getLogger().quiet("Verifying URL '{}'", url);
+
+        // verify URL by making a HTTP call
+    }
+}
+
+def f1 = {
+    tasks.register('verifyUrl', UrlVerify)
+}
+f1() // gradle -Pprofile=declare-command-line-option verifyUrl --url=haitaoss.cn -q

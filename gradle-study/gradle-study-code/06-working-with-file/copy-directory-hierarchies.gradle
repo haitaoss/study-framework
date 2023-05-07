@@ -1,0 +1,16 @@
+// gradle -q -Pprofile=copy-directory-hierarchies copyReportsDirForArchiving
+// gradle -q -Pprofile=copy-directory-hierarchies copyReportsDirForArchiving2
+// 复制整个目录
+tasks.register('copyReportsDirForArchiving', Copy) {
+    /*from layout.buildDirectory.dir("reports")
+    into layout.buildDirectory.dir("toArchive")*/
+    from layout.projectDirectory.dir("test-resources/reports")
+    into layout.projectDirectory.dir("test-resources/toArchive")
+}
+// 复制整个目录，包括其自身
+tasks.register('copyReportsDirForArchiving2', Copy) {
+    from(layout.projectDirectory) {
+        include "test-resources/reports/**"
+    }
+    into layout.projectDirectory.dir("test-resources/toArchive")
+}

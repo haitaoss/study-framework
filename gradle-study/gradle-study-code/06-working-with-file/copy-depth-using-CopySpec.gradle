@@ -1,0 +1,51 @@
+// 共享复制规范
+CopySpec webAssetsSpec = copySpec {
+    from 'src/main/webapp'
+    include '**/*.html', '**/*.png', '**/*.jpg'
+    rename '(.+)-staging(.+)', '$1$2'
+}
+
+tasks.register('copyAssets', Copy) {
+    into layout.buildDirectory.dir("inPlaceApp")
+    with webAssetsSpec
+}
+
+tasks.register('distApp', Zip) {
+    archiveFileName = 'my-app-dist.zip'
+    destinationDirectory = layout.buildDirectory.dir('dists')
+
+    from appClasses
+    with webAssetsSpec
+}
+
+// 仅共享复制模式
+def webAssetPatterns = {
+    include '**/*.html', '**/*.png', '**/*.jpg'
+}
+
+tasks.register('copyAppAssets', Copy) {
+    into layout.buildDirectory.dir("inPlaceApp")
+    from 'src/main/webapp', webAssetPatterns
+}
+
+tasks.register('archiveDistAssets', Zip) {
+    archiveFileName = 'distribution-assets.zip'
+    destinationDirectory = layout.buildDirectory.dir('dists')
+
+    from 'distResources', webAssetPatterns
+}
+
+// 嵌套复制规范
+tasks.register('nestedSpecs', Copy) {
+    into layout.buildDirectory.dir("explodedWar")
+    exclude '**/*staging*'
+    from('src/dist') {
+        include '**/*.html', '**/*.png', '**/*.jpg'
+    }
+    from(sourceSets.main.output) {
+        into 'WEB-INF/classes'
+    }
+    into('WEB-INF/lib') {
+        from configurations.runtimeClasspath
+    }
+}

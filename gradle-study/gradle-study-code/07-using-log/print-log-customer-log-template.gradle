@@ -1,0 +1,8 @@
+// gradle -I=log-template-init.gradle -Pprofile=print-log-customer-log-template hello
+
+tasks.register('hello') {
+    doLast {
+        println 'hhhh'
+    }
+}
+

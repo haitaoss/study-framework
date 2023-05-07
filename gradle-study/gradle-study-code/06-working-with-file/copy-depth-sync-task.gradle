@@ -1,0 +1,5 @@
+// 使用同步任务复制依赖项
+tasks.register('libs', Sync) {
+    from configurations.runtime
+    into layout.buildDirectory.dir('libs')
+}

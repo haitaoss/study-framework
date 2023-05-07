@@ -1,0 +1,35 @@
+// gradle -q -Pprofile=file-path-depth
+// 最大程度地减少生成中硬编码路径的数量(通过构建参数 读取目录比较好)
+println layout.buildDirectory
+println layout.projectDirectory
+println "${rootDir}"
+println "${projectDir}"
+println "${buildDir}"
+
+def archivesDirPath = layout.buildDirectory.dir('archives')
+
+tasks.register('packageClasses', Zip) {
+    archiveAppendix = "classes"
+    destinationDirectory = archivesDirPath
+
+    from compileJava
+}
+
+// `file()` 方法与不同类型的参数结合使用的一些示例
+// Using a relative path
+File configFile = file('src/config.xml')
+
+// Using an absolute path
+configFile = file(configFile.absolutePath)
+
+// Using a File object with a relative path
+configFile = file(new File('src/config.xml'))
+
+// Using a java.nio.file.Path object with a relative path
+configFile = file(Paths.get('src', 'config.xml'))
+
+// Using an absolute java.nio.file.Path object
+configFile = file(Paths.get(System.getProperty('user.home')).resolve('global-config.xml'))
+
+// 创建相对于父项目的路径
+configFile = file("$rootDir/shared/config.xml")

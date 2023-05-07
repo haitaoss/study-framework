@@ -1,0 +1,22 @@
+// gradle -Pprofile=print-log -d
+
+// println 输出的信息，会作为 quiet级别的日志
+println 'A message which is logged at QUIET level'
+
+// 使用 logger 属性打印日记
+logger.quiet('An info log message which is always logged.')
+logger.error('An error log message.')
+logger.warn('A warning log message.')
+logger.lifecycle('A lifecycle info log message.')
+logger.info('An info log message.')
+logger.debug('A debug log message.')
+logger.trace('A trace log message.') // Gradle never logs TRACE level logs
+
+// 使用占位符编写日志消息
+logger.info('A {} log message', 'info')
+
+// 使用 SLF4J 写入日志消息
+import org.slf4j.LoggerFactory
+
+def slf4jLogger = LoggerFactory.getLogger('some-logger')
+slf4jLogger.info('An info log message logged using SLF4j')

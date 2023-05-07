@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!-- 需要添加
+<html  xmlns:th="http://www.thymeleaf.org">
+这样在后面的th标签就不会报错
+ -->
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>xx</title>
+</head>
+<body>
+
+
+<h1>表单提交</h1>
+<!-- 表单提交用户信息,注意字段的设置,直接是*{} -->
+<form action="/dologin" method="post">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    <!--<input type="text" name="username"/>
+    <input type="text" name="password"/>-->
+    用户名：<input type="text" name="name"/><br/>
+    密码：<input type="text" name="pwd"/><br/>
+    记住我：<input type="checkbox" name="remember-me" title="记住密码"/><br/>
+    <input type="submit"/>
+</form>
+</body>
+</html>

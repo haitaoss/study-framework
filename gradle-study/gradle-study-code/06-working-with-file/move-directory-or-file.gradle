@@ -1,0 +1,7 @@
+// gradle -q -Pprofile=move-directory-or-file moveReports
+tasks.register('moveReports') {
+    doLast {
+        ant.move file: "${projectDir}/test-resources/reports",
+                todir: "${projectDir}/test-resources/toArchive2"
+    }
+}

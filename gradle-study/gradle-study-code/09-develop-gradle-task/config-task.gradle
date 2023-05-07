@@ -1,0 +1,35 @@
+// gradle -Pprofile=config-task
+def f1 = {
+    // 注册一个没有默认行为的复制任务
+    tasks.register('myCopy', Copy)
+
+    // 配置任务
+    tasks.named('myCopy') {
+        from 'resources'
+        into 'target'
+        include('**/*.txt', '**/*.xml', '**/*.properties')
+    }
+
+}
+// 检索任务引用并使用它来配置任务
+def f2 = {
+    // 注册一个没有默认行为的复制任务
+    tasks.register('myCopy', Copy)
+
+    // Configure task through a task provider
+    def myCopy = tasks.named('myCopy') {
+        from 'resources'
+        into 'target'
+    }
+    myCopy.configure {
+        include('**/*.txt', '**/*.xml', '**/*.properties')
+    }
+}
+// 使用配置块定义任务
+def f3 = {
+    tasks.register('copy', Copy) {
+        from 'resources'
+        into 'target'
+        include('**/*.txt', '**/*.xml', '**/*.properties')
+    }
+}

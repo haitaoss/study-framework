@@ -1,0 +1,10 @@
+plugins {
+    id 'war'
+}
+
+tasks.register("deployToTomcat", Copy) {
+    from war
+    into layout.projectDirectory.dir('tomcat/webapps')
+    // `Copy`任务的目标目录中的不可读文件并避免耗时的最新检查
+    doNotTrackState("Deployment directory contains unreadable files")
+}

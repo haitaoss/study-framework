@@ -1,0 +1,15 @@
+// 脚本 内置的熟悉
+
+// gradle -Pprofile=standard-properties -q
+
+println "============="
+println name
+println project.name
+println path
+println description
+println projectDir
+println buildDir
+println group
+println version
+println ant
+println "============="

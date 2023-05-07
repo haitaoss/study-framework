@@ -1,0 +1,6 @@
+// gradle -q -b using-buildSrc.gradle
+
+// 这个my-plugin 是通过buildSrc 加载的插件
+plugins {
+    id 'my-plugin'
+}

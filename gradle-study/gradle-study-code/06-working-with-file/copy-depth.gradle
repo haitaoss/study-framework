@@ -1,0 +1,69 @@
+// gradle -q -Pprofile=copy-depth anotherCopyTask
+
+// 指定复制任务源文件和目标目录
+tasks.register('anotherCopyTask', Copy) {
+    // Copy everything under src/main/webapp
+    from 'src/main/webapp'
+    // Copy a single file
+    from 'src/staging/index.html'
+    // Copy the output of a task
+    from copyTask
+    // Copy the output of a task using Task outputs explicitly.
+    from copyTaskWithPatterns.outputs
+    // Copy the contents of a Zip file
+    from zipTree('src/main/assets.zip')
+    // Determine the destination directory later
+    into { getDestDir() }
+}
+
+// 筛选文件
+tasks.register('copyTaskWithPatterns', Copy) {
+    from 'src/main/webapp'
+    into layout.buildDirectory.dir('explodedWar')
+    include '**/*.html'
+    include '**/*.jsp'
+    exclude { FileTreeElement details ->
+        details.file.name.endsWith('.html') &&
+                details.file.text.contains('DRAFT')
+    }
+}
+// 复制文件时重命名文件
+tasks.register('rename', Copy) {
+    from 'src/main/webapp'
+    into layout.buildDirectory.dir('explodedWar')
+    // Use a closure to convert all file names to upper case
+    rename { String fileName ->
+        fileName.toUpperCase()
+    }
+    // Use a regular expression to map the file name
+    rename '(.+)-staging-(.+)', '$1$2'
+    rename(/(.+)-staging-(.+)/, '$1$2')
+}
+
+// 筛选文件内容（令牌替换、模板化等）
+import org.apache.tools.ant.filters.FixCrLfFilter
+import org.apache.tools.ant.filters.ReplaceTokens
+
+tasks.register('filter', Copy) {
+    from 'test-resources/test-file.txt'
+    into layout.buildDirectory.dir('explodedWar')
+
+    // Substitute property tokens in files(替换文件中的属性值)
+    // 替换 ${expression}
+    expand(copyright: '2009', version: '2.3.1')
+    expand(project.properties)
+
+    // Use some of the filters provided by Ant
+    // 替换 @xxx@
+    filter(FixCrLfFilter)
+    filter(ReplaceTokens, tokens: [copyright: '2009', version: '2.3.1'])
+    // Use a closure to remove lines
+    filter { String line ->
+        line.startsWith('-') ? null : line
+    }
+    // Use a closure to filter each line
+    filter { String line ->
+        "[$line]"
+    }
+    filteringCharset = 'UTF-8'
+}

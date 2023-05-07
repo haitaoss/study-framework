@@ -1,0 +1,32 @@
+//通过任务集合访问任务
+
+def f1 = {
+    tasks.register('hello')
+    tasks.register('copy', Copy)
+
+    println tasks.named('hello').get().name
+
+    println tasks.named('copy').get().destinationDir
+
+}
+
+// 还可以使用 tasks.withType() 方法访问特定类型的任务。这样可以轻松避免代码重复并减少冗余。
+def f2 = {
+    tasks.withType(Tar).configureEach {
+        enabled = false
+    }
+
+    tasks.register('test') {
+        dependsOn tasks.withType(Copy)
+    }
+}
+// 按路径访问任务(不推荐使用)
+def f3 = {
+    tasks.register('hello')
+
+    println tasks.getByPath('hello').path
+    println tasks.getByPath(':hello').path
+    println tasks.getByPath('project-a:hello').path
+    println tasks.getByPath(':project-b:hello').path
+}
+f3() // gradle  -Pprofile=location-task

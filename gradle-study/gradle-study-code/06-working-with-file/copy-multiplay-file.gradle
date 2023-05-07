@@ -1,0 +1,32 @@
+// 复制多个文件
+// gradle -q -Pprofile=copy-multiplay-file copyReportsForArchiving
+// gradle -q -Pprofile=copy-multiplay-file copyPdfReportsForArchiving
+// gradle -q -Pprofile=copy-multiplay-file copyAllPdfReportsForArchiving
+
+// from 传多个参数
+tasks.register('copyReportsForArchiving', Copy) {
+    from layout.projectDirectory.file("test-resources/reports/test.txt"), layout.projectDirectory.file("test-resources/reports/test2.txt")
+    //  layout.projectDirectory.file("reports/test2.txt")
+    into layout.projectDirectory.dir("test-resources/toArchive")
+}
+
+// 使用平面过滤器
+tasks.register('copyPdfReportsForArchiving', Copy) {
+    from layout.projectDirectory.dir("test-resources/reports")
+    include "*.txt"
+    into layout.projectDirectory.dir("ttest-resources/oArchive")
+}
+
+
+// 使用深度过滤器
+tasks.register('copyAllPdfReportsForArchiving', Copy) {
+    from layout.projectDirectory.dir("test-resources/reports")
+    include "**/*.txt"
+    into layout.projectDirectory.dir("test-resources/toArchive")
+}
+
+
+gradle.taskGraph.afterTask {
+    println projectDir
+    println "copy done..."
+}

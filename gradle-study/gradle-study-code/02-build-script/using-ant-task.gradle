@@ -1,0 +1,15 @@
+// 使用 Ant 任务：如何执行 Ant 任务以及如何访问 Ant 属性
+
+// gradle -PbuildProfile=using-ant-task -q loadfile
+tasks.register('loadfile') {
+    doLast {
+        def files = file('./antLoadfileResources').listFiles().sort()
+        files.each { File file ->
+            if (file.isFile()) {
+                ant.loadfile(srcFile: file, property: file.name)
+                println " *** $file.name ***"
+                println "${ant.properties[file.name]}"
+            }
+        }
+    }
+}

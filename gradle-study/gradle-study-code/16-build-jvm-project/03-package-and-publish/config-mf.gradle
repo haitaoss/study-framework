@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+}
+// 自定义清单文件的属性
+def f1 = {
+    jar {
+        manifest {
+            attributes("Implementation-Title": "Gradle",
+                    "Implementation-Version": archiveVersion)
+        }
+    }
+}
+
+// MF 对象
+def f2 = {
+    ext.sharedManifest = manifest {
+        attributes("Implementation-Title": "Gradle",
+                "Implementation-Version": version)
+    }
+    tasks.register('fooJar', Jar) {
+        manifest = project.manifest {
+            from sharedManifest
+        }
+    }
+}
+
+// 合并清单文件
+def f3 = {
+    tasks.register('barJar', Jar) {
+        manifest {
+            attributes 'Implementation-Title': 'sfaf'
+            from sharedManifest, 'src/config/basemanifest.txt'
+            from(['src/config/javabasemanifest.txt', 'src/config/libbasemanifest.txt']) {
+                eachEntry { details ->
+                    println details
+                    if (details.baseValue != details.mergeValue) {
+                        details.value = baseValue
+                    }
+                    if (details.key == 'foo') {
+                        details.exclude()
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 保存到磁盘
+def f4 = {
+    tasks.named('jar') { manifest.writeTo(layout.projectDirectory.file('mymanifest.mf')) }
+}
+f1()
+f2()
+f3()
+f4()
+// gradle -b=config-mf.gradle -q jar
+// gradle -b=config-mf.gradle -q fooJar
+// gradle -b=config-mf.gradle -q barJar

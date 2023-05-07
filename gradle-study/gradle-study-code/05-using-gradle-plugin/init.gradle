@@ -1,0 +1,12 @@
+// 配置文件的使用方式 --init-script=init-file.gradle
+// 插件管理
+settingsEvaluated { settings ->
+    settings.pluginManagement {
+        plugins {
+        }
+        resolutionStrategy {
+        }
+        repositories {
+        }
+    }
+}

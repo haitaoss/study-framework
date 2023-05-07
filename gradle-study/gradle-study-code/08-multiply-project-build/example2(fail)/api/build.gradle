@@ -1,0 +1,8 @@
+plugins {
+    id 'myproject.java-conventions'
+    id 'java-platform'
+}
+
+dependencies {
+    compile project(':shared')
+}

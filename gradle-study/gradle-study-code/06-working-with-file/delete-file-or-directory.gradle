@@ -1,0 +1,14 @@
+// gradle -q -Pprofile=delete-file-or-directory myClean
+// gradle -q -Pprofile=delete-file-or-directory cleanTempFiles
+
+// 删除目录
+tasks.register('myClean', Delete) {
+    delete buildDir
+}
+
+// 删除与特定模式匹配的文件
+tasks.register('cleanTempFiles', Delete) {
+    delete fileTree("test-resources").matching {
+        include "**/*.tmp"
+    }
+}

@@ -1,0 +1,21 @@
+// gradle -Pprofile=create-property-or-provider -q
+def f1 = {
+    def property = objects.property(String)
+    property.convention("1") // 设置默认值
+    println property.get()
+    property.convention("2")
+    println property.get()
+
+    property.set('hello') // 一旦使用了set 那么在使用convention 是无效的
+    println property.get()
+
+    property.convention("2")
+    println property.get()
+}
+
+def f2 = {
+    def provider = tasks.register('xx').map { 'hello' }
+    println provider.get()
+    println provider.isPresent()
+}
+f2()

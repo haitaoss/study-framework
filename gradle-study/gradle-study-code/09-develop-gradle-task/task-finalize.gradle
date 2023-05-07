@@ -1,0 +1,35 @@
+// gradle -Pprofile=task-finalize -q taskX
+
+// 添加任务终结器
+def f1 = {
+    def taskX = tasks.register('taskX') {
+        doLast {
+            println 'taskX'
+        }
+    }
+    def taskY = tasks.register('taskY') {
+        doLast {
+            println 'taskY'
+        }
+    }
+
+    taskX.configure { finalizedBy taskY }
+}
+// 失败任务的任务终结器
+def f2 = {
+    def taskX = tasks.register('taskX') {
+        doLast {
+            println 'taskX'
+            throw new RuntimeException()
+        }
+    }
+    def taskY = tasks.register('taskY') {
+        doLast {
+            println 'taskY'
+        }
+    }
+
+    taskX.configure { finalizedBy taskY }
+}
+//f1()
+f1()

@@ -1,0 +1,13 @@
+// gradle -Pprofile=print-log-config -w
+
+// 配置标准输出捕获
+logging.captureStandardOutput LogLevel.INFO
+println 'A message which is logged at INFO level'
+
+// 为任务配置标准输出捕获
+tasks.register('logInfo') {
+    logging.captureStandardOutput LogLevel.WARN
+    doFirst {
+        println 'A task message which is logged at INFO level'
+    }
+}

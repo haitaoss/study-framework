@@ -1,0 +1,61 @@
+# filebeat/filebeat.yml
+###################### Filebeat Configuration Example #########################
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+filebeat.inputs:
+  - type: filestream
+    enabled: true
+    paths:
+      ## app-服务名称.log, 为什么写死，防止发生轮转抓取历史数据
+      - /var/log/filebeat/app-collector.log
+    encoding: utf-8
+    multiline:
+      #pattern: '^\s*(\d{4}|\d{2})\-(\d{2}|[a-zA-Z]{3})\-(\d{2}|\d{4})'   # 指定匹配的表达式（匹配以 2017-11-15 08:04:23:889 时间格式开头的字符串）
+      pattern: '^\['                              # 指定匹配的表达式（匹配以 "{ 开头的字符串）
+      negate: true                                # 是否匹配到
+      match: after                                # 合并到上一行的末尾
+      max_lines: 2000                             # 最大的行数
+      timeout: 2s                                 # 如果在规定时间没有新的日志事件就不等待后面的日志
+    fields:
+      logbiz: collector
+      logtopic: app-log-collector   # 按服务划分用作kafka topic
+      env: dev
+
+  - type: filestream
+    enabled: true
+    paths:
+      - /var/log/filebeat/error-collector.log
+    encoding: utf-8
+    multiline:
+      #pattern: '^\s*(\d{4}|\d{2})\-(\d{2}|[a-zA-Z]{3})\-(\d{2}|\d{4})'   # 指定匹配的表达式（匹配以 2017-11-15 08:04:23:889 时间格式开头的字符串）
+      pattern: '^\['                              # 指定匹配的表达式（匹配以 "{ 开头的字符串）
+      negate: true                                # 是否匹配到
+      match: after                                # 合并到上一行的末尾
+      max_lines: 2000                             # 最大的行数
+      timeout: 2s                                 # 如果在规定时间没有新的日志事件就不等待后面的日志
+    fields:
+      logbiz: collector
+      logtopic: error-log-collector   # 按服务划分用作kafka topic
+      env: dev
+
+output.kafka:
+  # initial brokers for reading cluster metadata
+  hosts: [ "kafka:9092" ]
+  version: 1.1.0
+  # message topic selection + partitioning
+  topic: '%{[fields.logtopic]}'
+
+  required_acks: 1
+  compression: gzip
+  max_message_bytes: 1000000
+
+
+# output.console:
+#   pretty: true
+
+logging.to_files: false
+logging.level: info
+logging.metrics.enabled: false

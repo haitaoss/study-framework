@@ -1,0 +1,2 @@
+// 这个plugin 是 extra-properties 测试用例需要的
+apply from: "${profile}.gradle"

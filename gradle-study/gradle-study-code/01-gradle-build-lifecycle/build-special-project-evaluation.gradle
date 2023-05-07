@@ -1,0 +1,16 @@
+// gradle test -PbuildProfile=special-project-evaluation -PhasTests=true
+
+
+// 将测试任务添加到每个具有特定属性集的项目
+allprojects {
+    afterEvaluate { project ->
+        if (project.hasTests) {
+            println "Adding test task to $project"
+            project.task('test') {
+                doLast {
+                    println "Running tests for $project"
+                }
+            }
+        }
+    }
+}

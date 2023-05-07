@@ -1,0 +1,29 @@
+// 插件管理， pluginManagement 必须放在文件的第一行
+pluginManagement {
+    // 插件版本管理
+    plugins {
+        // helloPluginVersion 可以配置在 gradle.properties 文件中
+        // 插件版本从 `gradle.properties` 加载并在设置脚本中进行配置，允许将插件添加到任何项目中，而无需指定版本。
+        id 'com.example.hello' version "${helloPluginVersion}"
+    }
+    // 插件解析规则
+    resolutionStrategy {
+        eachPlugin {
+            // 这告诉 Gradle 使用指定的插件实现 artifact ，而不是使用从插件 ID 到 Maven/Ivy 坐标的内置默认映射。
+            if (requested.id.namespace == 'com.example') {
+                useModule('com.example:sample-plugins:1.0.0')
+            }
+        }
+    }
+    repositories {
+        // 插件查找顺序 maven -> gradlePluginPortal -> ivy
+        maven {
+            url './maven-repo'
+        }
+        gradlePluginPortal()
+        ivy {
+            url './ivy-repo'
+        }
+    }
+}
+rootProject.name = '05-using-gradle-plugin'

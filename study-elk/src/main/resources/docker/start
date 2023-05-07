@@ -1,0 +1,67 @@
+#!/bin/sh
+
+# 定义变量
+v1=/opt/data/filebeat_data/
+v2=/opt/data/elasticsearch_data/config/
+v3=/opt/data/logstash_data/pipeline
+
+init_dir(){
+  for v in $v1 $v2 $v3 ;  do
+    if [ ! -d $v ]; then
+      mkdir -p $v
+    fi;
+  done
+}
+
+init_config_file(){
+  cp -f filebeat.yml $v1
+  cp -f elasticsearch.yml $v2
+  cp -f logstash.conf $v3
+}
+
+start(){
+  init_dir
+  init_config_file
+  docker-compose up
+}
+stop(){
+  docker-compose stop
+}
+restart(){
+  docker-compose restart
+}
+status(){
+  docker-compose ps
+}
+clean(){
+  docker-compose down
+}
+case "$1" in
+   'start')
+      start
+      ;;
+   'stop')
+     stop
+     ;;
+   'restart')
+     stop
+     start
+     ;;
+   'status')
+     status
+     ;;
+   'clean')
+     clean
+     ;;
+  *)
+echo "Usage: $0 {start|stop|restart|status|clean}"
+exit 1
+esac
+exit 0
+
+
+# scp src/main/resources/docker/* vagrant@192.168.2.100:/home/vagrant
+
+# 挂载日记文件到 服务器中，方便测试  http://www.4k8k.xyz/article/fuchen91/105097022
+# mount -t cifs //192.168.1.101/logs /opt/data/filebeat_data/logs -o username=haitao,password=haitao,nounix,sec=ntlmssp
+# umount

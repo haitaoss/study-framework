@@ -1,0 +1,24 @@
+// gradle -q -Pprofile=creating-archives packageDistribution
+// gradle -q -Pprofile=creating-archives packageDistribution2
+// 将目录存为归档
+tasks.register('packageDistribution', Zip) {
+    archiveFileName = "my-distribution.zip"
+    destinationDirectory = layout.projectDirectory.dir('test-resources/dist')
+
+    from layout.projectDirectory.dir("test-resources/toArchive")
+}
+
+// 使用基本插件作为其存档名称约定
+apply plugin: 'base'
+version = "1.0.0"
+tasks.register('packageDistribution2', Zip) {
+    from(layout.projectDirectory.dir("test-resources/toArchive")) {
+        exclude "**/*.txt"
+    }
+
+    // 可以在一个复制规范中具有多个 `from()` 声明，每个声明都有自己的配置。
+    from(layout.projectDirectory.dir("test-resources/toArchive")) {
+        include "**/*.txt"
+        into "docs"
+    }
+}

@@ -1,0 +1,6 @@
+// gradle -q -Pprofile=create-directory ensureDirectory
+tasks.register('ensureDirectory') {
+    doLast {
+        mkdir "images"
+    }
+}

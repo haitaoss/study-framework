@@ -1,0 +1,33 @@
+// 额外属性：每个领域对象都包含额外属性，包括但不限于projects, tasks, and source sets。可以通过所属对象的 `ext` 属性添加、读取和设置额外的属性。或者，`ext` 块一次添加多个属性。
+// gradle -Pprofile=extra-properties -q printProperties
+
+//apply plugin: 'java'
+apply plugin: 'java-library'
+ext {
+    println this
+    springVersion = "3.1.0.RELEASE"
+    emailNotification = "build@master.org"
+}
+
+sourceSets.all { ext.purpose = null }
+
+sourceSets {
+    main {
+        purpose = "production"
+    }
+    test {
+        purpose = "test"
+    }
+    plugin {
+        purpose = "production"
+    }
+}
+
+tasks.register('printProperties') {
+    doLast {
+        println project.ext.each { println it }
+        println springVersion
+        println emailNotification
+        sourceSets.matching { it.purpose == "production" }.each { println it.name }
+    }
+}

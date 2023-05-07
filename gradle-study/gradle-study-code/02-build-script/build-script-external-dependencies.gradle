@@ -1,0 +1,18 @@
+// 构建脚本，添加依赖到classpath 中，这样子就可以直接使用依赖里面的所有类了
+
+// gradle -PbuildProfile=build-script-external-dependencies -q encode
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'commons-codec', name: 'commons-codec', version: '1.2'
+    }
+}
+
+tasks.register('encode') {
+    doLast {
+        def byte[] encodedString = new Base64().encode('hello world\n'.getBytes())
+        println new String(encodedString)
+    }
+}

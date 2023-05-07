@@ -1,0 +1,29 @@
+// gradle -q -Pprofile=copy-single-file copyReport
+tasks.register('copyReport', Copy) {
+    println buildDir
+    from layout.projectDirectory.dir("test-resources/reports/test.txt")
+    into layout.projectDirectory.dir("test-resources/toArchive")
+}
+
+// 字符串填充
+tasks.register('copyReport2', Copy) {
+    from "$projectDir/test-resources/reports/test.txt"
+    into "$projectDir/test-resources/toArchive"
+}
+
+// 优先选择任务/项目属性而不是硬编码路径
+String myReportTask = "/reports/test.txt"
+String archiveReportsTask = "/toArchive"
+tasks.register('copyReport3', Copy) {
+    from myReportTask
+    into archiveReportsTask
+}
+
+gradle.taskGraph.afterTask {
+    println "copy done..."
+}
+
+tasks.register('hello') {
+    println buildDir
+    println projectDir
+}

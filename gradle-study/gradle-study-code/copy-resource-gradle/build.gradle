@@ -1,0 +1,13 @@
+def contentSpec = copySpec {
+    from("content") {
+        include "**/*.txt"
+    }
+}
+
+task copy(type: Copy) {
+    into "$buildDir/copy"
+    with contentSpec
+
+    println 'copy done.'
+}
+// 执行 gradle  进行测试

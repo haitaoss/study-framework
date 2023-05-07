@@ -1,0 +1,14 @@
+buildscript {
+    repositories {
+        maven {
+            url = uri(repoLocation)
+        }
+    }
+    dependencies {
+        classpath 'org.gradle:task:1.0-SNAPSHOT'
+    }
+}
+
+tasks.register('greeting', org.gradle.GreetingTask) {
+    greeting = 'howdy!'
+}

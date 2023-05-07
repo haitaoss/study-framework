@@ -1,0 +1,6 @@
+test:
+  ip: haitaoss.cn
+  searchUrl: ${test.ip}:8080/test
+  taskMap:
+    1: task1
+    2: task2

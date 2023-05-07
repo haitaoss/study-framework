@@ -1,0 +1,22 @@
+//定义默认任务：命令执行的时候未指定task，那么就会执行默认任务
+
+// gradle -PbuildProfile=def-default-task -q
+defaultTasks 'clean', 'run'
+
+tasks.register('clean') {
+    doLast {
+        println 'Default Cleaning!'
+    }
+}
+
+tasks.register('run') {
+    doLast {
+        println 'Default Running!'
+    }
+}
+
+tasks.register('other') {
+    doLast {
+        println "I'm not a default task!"
+    }
+}

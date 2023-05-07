@@ -1,0 +1,71 @@
+// gradle -Pprofile=add-dependencies-to-task taskX
+// 另一个项目添加对任务的依赖关系
+def f1 = {
+    project('project-a') {
+        tasks.register('taskX') {
+            dependsOn ':project-b:taskY'
+            doLast {
+                println 'taskX'
+            }
+        }
+    }
+
+    project('project-b') {
+        tasks.register('taskY') {
+            doLast {
+                println 'taskY'
+            }
+        }
+    }
+}
+// 使用任务 Provider 对象添加依赖关系
+def f2 = {
+    def taskX = tasks.register('taskX') {
+        doLast {
+            println 'taskX'
+        }
+    }
+
+    def taskY = tasks.register('taskY') {
+        doLast {
+            println 'taskY'
+        }
+    }
+
+    taskX.configure {
+        dependsOn taskY
+    }
+}
+// 使用惰性块添加依赖项
+def f3 = {
+    def taskX = tasks.register('taskX') {
+        doLast {
+            println 'taskX'
+        }
+    }
+
+    // Using a Gradle Provider
+    taskX.configure {
+        dependsOn(provider {
+            tasks.findAll { task -> task.name.startsWith('lib') }
+        })
+    }
+
+    tasks.register('lib1') {
+        doLast {
+            println('lib1')
+        }
+    }
+
+    tasks.register('lib2') {
+        doLast {
+            println('lib2')
+        }
+    }
+
+    tasks.register('notALib') {
+        doLast {
+            println('notALib')
+        }
+    }
+}

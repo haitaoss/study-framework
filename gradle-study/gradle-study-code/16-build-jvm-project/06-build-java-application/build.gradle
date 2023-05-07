@@ -1,0 +1,33 @@
+// gradle run
+plugins {
+    id 'application'
+}
+
+application {
+    // 启动类
+    mainClass = 'cn.haitaoss.Hello'
+    // 配置默认jvm 参数
+    applicationDefaultJvmArgs = ['-Dgreeting.language=en']
+    // 配置 启动脚本目录名称（执行 gradle distZip 等命令你就知道了）
+    executableDir = 'tmp_bin'
+}
+
+tasks.register('createDocs') {
+    def docs = layout.buildDirectory.dir('docs')
+    outputs.dir docs
+    doLast {
+        docs.get().asFile.mkdirs()
+        docs.get().file('readme.txt').asFile.write('Read me!')
+    }
+}
+
+// 配置发行版本的相关信息
+distributions {
+    main {
+        contents {
+            from(createDocs) {
+                into 'docs'
+            }
+        }
+    }
+}

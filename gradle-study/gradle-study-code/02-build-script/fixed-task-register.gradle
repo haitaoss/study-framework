@@ -1,0 +1,10 @@
+// 灵活的任务注册
+
+// gradle -PbuildProfile=fixed-task-register -q task0 task1 task2 task3
+4.times { counter ->
+    tasks.register("task$counter") {
+        doLast {
+            println "I'm task number $counter"
+        }
+    }
+}

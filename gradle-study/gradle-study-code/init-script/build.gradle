@@ -1,0 +1,23 @@
+repositories {
+    mavenCentral()
+}
+tasks.register('showRepos') {
+    doLast {
+        println "All repos:"
+        println repositories.collect { it.name }
+    }
+}
+
+tasks.register('showRepositories') {
+    doLast {
+        repositories.each {
+            println "repository: ${it.name} ('${it.url}')"
+        }
+    }
+}
+
+// $ gradle --init-script=init1.gradle showRepos -q
+
+// $ gradle --init-script init2.gradle showRepos -q
+
+// $ gradle --init-script init.gradle -q showRepositories

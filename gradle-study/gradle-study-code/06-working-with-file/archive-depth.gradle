@@ -1,0 +1,74 @@
+// gradle -q -Pprofile=archive-depth echoNames
+
+// 将目录存档为zip
+tasks.register('packageDistribution', Zip) {
+    archiveFileName = "my-distribution.zip"
+    destinationDirectory = layout.buildDirectory.dir('dist')
+
+    from layout.buildDirectory.dir("toArchive")
+}
+// ================================================================================================================
+// 使用 base 插件命名规范 定义归档文件名
+apply plugin: 'base'
+
+version = 1.0
+
+tasks.register('myZip1', Zip) {
+    from 'somedir'
+
+    doLast {
+        println archiveFileName.get()
+        println relativePath(destinationDirectory)
+        println relativePath(archiveFile)
+    }
+}
+
+// ================================================================================================================
+
+// 存档任务的配置 - 自定义存档名称
+tasks.register('myCustomZip', Zip) {
+    archiveBaseName = 'customName'
+    from 'somedir'
+
+    doLast {
+        println archiveFileName.get()
+    }
+}
+
+// ================================================================================================================
+// 存档任务的配置 - 附录和分类器
+apply plugin: 'base'
+
+version = 1.0
+// tag::base-plugin-config[]
+base {
+    archivesName = "gradle"
+    distsDirectory = layout.buildDirectory.dir('custom-dist')
+    libsDirectory = layout.buildDirectory.dir('custom-libs')
+}
+// end::base-plugin-config[]
+
+tasks.register('myZip', Zip) {
+    from 'somedir'
+}
+
+tasks.register('myOtherZip', Zip) {
+    archiveAppendix = 'wrapper'
+    archiveClassifier = 'src'
+    from 'somedir'
+}
+
+tasks.register('echoNames') {
+    doLast {
+        println "Project name: ${project.name}"
+        println myZip.archiveFileName.get()
+        println myOtherZip.archiveFileName.get()
+    }
+}
+
+// ================================================================================================================
+// 设置可重现的存档
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}

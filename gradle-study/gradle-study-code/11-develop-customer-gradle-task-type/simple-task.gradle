@@ -1,0 +1,37 @@
+/*
+abstract class GreetingTask extends DefaultTask {
+    // @TaskAction Gradle 将在任务执行时调用该方法。
+    @TaskAction
+    def greet() {
+        println 'hello from GreetingTask'
+    }
+}
+
+// Create a task using the task type
+tasks.register('hello', GreetingTask)
+// gradle -Pprofile=simple-task -q hello*/
+
+abstract class GreetingTask extends DefaultTask {
+    // 指定输入参数
+    @Input
+    abstract Property<String> getGreeting()
+
+    // 通过构造器设置参数的默认值
+    GreetingTask() {
+        greeting.convention('hello from GreetingTask')
+    }
+
+    // @TaskAction Gradle 将在任务执行时调用该方法。
+    @TaskAction
+    def greet() {
+        println greeting.get()
+    }
+}
+
+// Use the default greeting
+tasks.register('hello', GreetingTask)
+
+// Customize the greeting
+tasks.register('greeting', GreetingTask) {
+    greeting = 'greetings from GreetingTask'
+}

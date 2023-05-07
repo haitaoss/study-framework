@@ -1,0 +1,23 @@
+// gradle -q -Pprofile=unpacking-archives unpackFiles
+// gradle -q -Pprofile=unpacking-archives unpackLibsDirectory
+// 解压zip 文件
+tasks.register('unpackFiles', Copy) {
+    from zipTree("test-resources/thirdPartyResources.zip")
+    into layout.projectDirectory.dir("test-resources/resources")
+}
+
+// 解压缩 ZIP 文件的子集
+tasks.register('unpackLibsDirectory', Copy) {
+    from(zipTree("test-resources/thirdPartyResources.zip")) {
+//        include "lib/**"  // 仅提取在 lib 目录中的文件子集
+        include "**"  // 仅提取在 lib 目录中的文件子集
+        eachFile { fcd ->
+            // 通过从文件路径中删除 libs 段，将解压缩文件的路径重新映射到目标目录
+            println fcd.relativePath.segments
+            fcd.relativePath = new RelativePath(true, fcd.relativePath.segments.drop(1))
+        }
+        // 忽略重新映射产生的空目录
+        includeEmptyDirs = false
+    }
+    into layout.projectDirectory.dir("test-resources/resources")
+}

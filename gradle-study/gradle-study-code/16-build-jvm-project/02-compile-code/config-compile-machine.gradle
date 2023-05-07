@@ -1,0 +1,15 @@
+compileJava {
+    options.incremental = true
+    options.fork = true
+    options.failOnError = false
+
+    // 设置发布标记
+    options.release = 7
+}
+
+java {
+    toolchain {
+        // 设置编译语言
+        languageVersion = JavaLanguageVersion.of(7)
+    }
+}

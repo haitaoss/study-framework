@@ -1,0 +1,13 @@
+plugins {
+    id 'java-gradle-plugin'
+}
+
+// 绑定插件实现类 — `my.MyPlugin`
+gradlePlugin {
+    plugins {
+        myPlugins {
+            id = 'my-plugin'
+            implementationClass = 'my.MyPlugin'
+        }
+    }
+}

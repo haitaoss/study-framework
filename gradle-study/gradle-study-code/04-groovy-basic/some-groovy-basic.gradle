@@ -1,0 +1,50 @@
+// groovy 基础
+
+// Groovy 将强制命名参数到单个 map 参数中
+// Groovy will coerce named arguments
+// into a single map argument
+apply plugin: 'java'
+
+// gradle -Pprofile=some-groovy-basic -q check
+// Iterable gets an each() method
+configurations.runtimeClasspath.each { File f -> println f }
+
+// Using a getter method
+println project.buildDir
+println getProject().getBuildDir()
+
+// Using a setter method
+project.buildDir = 'target'
+getProject().setBuildDir('target')
+
+// 方法调用的括号是可选的
+test.systemProperty 'some.prop', 'value'
+test.systemProperty('some.prop', 'value')
+
+// List 和 Map 定义
+// List literal
+test.includes = ['org/gradle/api/**', 'org/gradle/internal/**']
+
+List<String> list = new ArrayList<String>()
+list.add('org/gradle/api/**')
+list.add('org/gradle/internal/**')
+test.includes = list
+
+// Map literal.
+Map<String, String> map = [key1: 'value1', key2: 'value2']
+
+
+// 闭包作为方法的最后一个参数：当方法的最后一个参数是闭包时，可以将闭包放在方法调用之后
+repositories {
+    println "in a closure"
+    println delegate
+}
+repositories() { println "in a closure" }
+repositories({ println "in a closure" })
+
+// 每个闭包都有一个代理对象
+dependencies {
+    assert delegate == project.dependencies
+    testImplementation('junit:junit:4.13')
+    delegate.testImplementation('junit:junit:4.13')
+}

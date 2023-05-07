@@ -1,0 +1,9 @@
+plugins {
+    id 'myproject.java-conventions'
+    id 'java-platform'
+}
+
+dependencies {
+    implementation project(':shared')
+    implementation project(':api')
+}

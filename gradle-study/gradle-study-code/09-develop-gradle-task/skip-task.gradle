@@ -1,0 +1,65 @@
+// gradle -Pprofile=skip-task -PskipHello=true hello
+// 使用谓词跳过任务
+def f1 = {
+    def hello = tasks.register('hello') {
+        doLast {
+            println 'hello world'
+        }
+    }
+
+    hello.configure {
+        onlyIf { !project.hasProperty('skipHello') }
+    }
+}
+//f1() // gradle -Pprofile=skip-task -PskipHello=true hello
+
+// 使用 StopExecutionException 跳过任务
+def f2 = {
+    def compile = tasks.register('compile') {
+        doLast {
+            println 'We are doing the compile.'
+        }
+    }
+
+    compile.configure {
+        doFirst {
+            // Here you would put arbitrary conditions in real life.
+            if (false) {
+                throw new StopExecutionException()
+            }
+        }
+    }
+    tasks.register('myTask') {
+        dependsOn('compile')
+        doLast {
+            println 'I am not affected'
+        }
+    }
+}
+//f2() // gradle -Pprofile=skip-task myTask -q
+
+// 启用和禁用任务
+def f3 = {
+    def disableMe = tasks.register('disableMe') {
+        doLast {
+            println 'This should not be printed if the task is disabled.'
+        }
+    }
+
+    disableMe.configure {
+        enabled = false
+    }
+}
+
+//f3() // gradle -Pprofile=skip-task disableMe -q
+
+// 指定任务超时时间
+def f4 = {
+    tasks.register("hangingTask") {
+        doLast {
+            Thread.sleep(100000)
+        }
+        timeout = Duration.ofMillis(500)
+    }
+}
+f4() // gradle -Pprofile=skip-task hangingTask -q

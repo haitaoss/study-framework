@@ -1,0 +1,10 @@
+// 声明变量
+
+// gradle -Pprofile=declare-variable -q copy
+def dest = 'dest' // 隐式类型
+String msg = "hello world" // 指定类型
+tasks.register('copy', Copy) {
+    println msg
+    from 'source'
+    into dest
+}

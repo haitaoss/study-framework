@@ -1,0 +1,50 @@
+version: '3'
+services:
+  m1:
+    image: mysql:8.0.20
+    container_name: m1
+    hostname: m1
+    volumes:
+      - /opt/data/mysql-m1/conf.d/docker.cnf:/etc/mysql/conf.d/docker.cnf
+    ports:
+      - "3310:3306"
+    networks:
+      - sharding-sphere-net
+    restart: always
+    command:
+      - '--default-authentication-plugin=mysql_native_password'
+      - '--character-set-server=utf8mb4'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+  s1:
+    image: mysql:8.0.20
+    container_name: s1
+    hostname: s1
+    volumes:
+      - /opt/data/mysql-s1/conf.d/docker.cnf:/etc/mysql/conf.d/docker.cnf
+    ports:
+      - "3311:3306"
+    networks:
+      - sharding-sphere-net
+    restart: always
+    command:
+      - '--default-authentication-plugin=mysql_native_password'
+      - '--character-set-server=utf8mb4'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+  sharding-proxy:
+    image: apache/sharding-proxy:4.1.1
+    container_name: sharding-proxy
+    volumes:
+      - /opt/data/sharding-proxy/conf:/opt/sharding-proxy/conf
+      - /opt/data/sharding-proxy/logs:/opt/sharding-proxy/logs
+    ports:
+      - "3308:3308"
+    environment:
+      PORT: 3308
+    restart: always
+    networks:
+      - sharding-sphere-net
+networks:
+  sharding-sphere-net:
+    driver: bridge

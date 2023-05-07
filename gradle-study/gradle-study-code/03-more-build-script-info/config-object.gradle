@@ -1,0 +1,27 @@
+// 配置对象
+
+// gradle -Pprofile=config-object -q configure
+// gradle -Pprofile=config-object -q configure2
+import java.text.FieldPosition
+
+tasks.register('configure') {
+    doLast {
+        def pos = configure(new FieldPosition(10)) {
+            beginIndex = 1
+            endIndex = 5
+        }
+        println pos.beginIndex
+        println pos.endIndex
+    }
+}
+
+// 读取外部脚本 配置对象
+tasks.register('configure2') {
+    doLast {
+        def pos = new java.text.FieldPosition(10)
+        // Apply the script
+        apply from: 'other.gradle', to: pos
+        println pos.beginIndex
+        println pos.endIndex
+    }
+}

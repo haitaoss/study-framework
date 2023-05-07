@@ -1,0 +1,20 @@
+/*
+    通过应用Java库插件，您可以获得一系列功能：
+
+- `compileJava` 任务，用于编译 *src/main/java* 下的所有 Java 源文件
+- *src/test/java* 下源文件的 `compileTestJava` 任务
+- 从 `test` *src/test/java* 运行测试的测试任务
+- 一个 `jar` 任务，它将 *src/main/*resources 中`main`已编译类和资源打包到名为 `<project>-<version>.jar`
+- `javadoc` `main`类生成 Javadoc 的 javadoc 任务
+ */
+plugins {
+    id 'java-library'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+version = '1.2.1'

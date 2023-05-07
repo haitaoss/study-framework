@@ -1,0 +1,82 @@
+abstract class IncrementalReverseTask extends DefaultTask {
+    @Incremental
+    @PathSensitive(PathSensitivity.NAME_ONLY)
+    @InputDirectory
+    abstract DirectoryProperty getInputDir()
+
+    @OutputDirectory
+    abstract DirectoryProperty getOutputDir()
+
+    @Input
+    abstract Property<String> getInputProperty()
+
+    // 任务操作只需为任何过期的输入生成输出文件，并为任何已删除的输入删除输出文件。
+    @TaskAction
+    void execute(InputChanges inputChanges) {
+        println(inputChanges.incremental
+                ? 'Executing incrementally'
+                : 'Executing non-incrementally'
+        )
+
+        inputChanges.getFileChanges(inputDir).each { change ->
+            if (change.fileType == FileType.DIRECTORY) return
+
+            println "${change.changeType}: ${change.normalizedPath}"
+            def targetFile = outputDir.file(change.normalizedPath).get().asFile
+            if (change.changeType == ChangeType.REMOVED) {
+                targetFile.delete()
+            } else {
+//                targetFile.text = change.file.text.reverse()
+                targetFile.text = change.file.text
+            }
+        }
+    }
+}
+// 首次运行增量任务
+def f1 = {
+    tasks.register('incrementalReverse', IncrementalReverseTask) {
+        inputDir = file('inputs')
+        outputDir = file("$buildDir/outputs")
+        inputProperty = project.properties['taskInputProperty'] ?: 'original'
+    }
+}
+
+//f1() // gradle -Pprofile=increment-task incrementalReverse -q
+// 使用更新的输入文件运行增量任务
+def f2 = {
+    tasks.register('updateInputs') {
+        outputs.dir('inputs')
+        doLast {
+            file('inputs/1.txt').text = 'Changed content for existing file 1.'
+            file('inputs/4.txt').text = 'Content for new file 4.'
+        }
+    }
+}
+//f2() // gradle -Pprofile=increment-task updateInputs incrementalReverse -q
+
+// 在删除输入文件的情况下运行增量任务
+def f3 = {
+    tasks.register('removeInput') {
+        outputs.dir('inputs')
+        doLast {
+            file('inputs/3.txt').delete()
+        }
+    }
+}
+//f1()
+//f3() // gradle -Pprofile=increment-task removeInput -q
+
+// 在删除输出文件的情况下运行增量任务
+def f4 = {
+    tasks.register('removeOutput') {
+        outputs.dir("$buildDir/outputs")
+        doLast {
+            file("$buildDir/outputs/1.txt").delete()
+        }
+    }
+}
+//f1()
+//f4() // gradle -Pprofile=increment-task removeOutput -q
+
+// 在输入属性已更改的情况下运行增量任务
+f1() // gradle -Pprofile=increment-task -PtaskInputProperty=changed incrementalReverse -q

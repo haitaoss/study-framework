@@ -1,0 +1,14 @@
+interface GreetingPluginExtension {
+    Property<String> getMessage()
+
+    Property<String> getGreeter()
+}
+
+project.extensions.create('test', GreetingPluginExtension)
+
+test {
+    message = 'test'
+    greeter = 'test helsfjl'
+}
+println test.message
+println test.greeter

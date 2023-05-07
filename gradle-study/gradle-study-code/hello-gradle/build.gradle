@@ -1,0 +1,11 @@
+if (!hasProperty('buildProfile')) ext.buildProfile = 'default'
+
+apply from: "profile-${buildProfile}.gradle"
+
+tasks.register('greeting') {
+    doLast {
+        println message
+    }
+}
+
+// 执行 gradle greeting 或者 gradle -PbuildProfile=prod greeting 进行测试

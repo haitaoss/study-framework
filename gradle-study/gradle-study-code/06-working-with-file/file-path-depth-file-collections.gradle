@@ -1,0 +1,53 @@
+// 创建文件集合
+FileCollection collection = layout.files('src/file1.txt',
+        new File('src/file2.txt'),
+        ['src/file3.csv', 'src/file4.csv'],
+        Paths.get('src', 'file5.txt'))
+
+// 延迟创建文件集合非常有用
+tasks.register('list') {
+    doLast {
+        File srcDir
+
+        // Create a file collection using a closure
+        collection = layout.files { srcDir.listFiles() }
+
+        srcDir = file('src')
+        println "Contents of $srcDir.name"
+        collection.collect { relativePath(it) }.sort().each { println it }
+
+        srcDir = file('src2')
+        println "Contents of $srcDir.name"
+        collection.collect { relativePath(it) }.sort().each { println it }
+    }
+}
+
+// 使用 `as` 运算符或支持的属性将文件集合转换为其他类型
+tasks.register('list2') {
+    doLast {
+        // Iterate over the files in the collection
+        collection.each { File file ->
+            println file.name
+        }
+
+        // Convert the collection to various types
+        Set set = collection.files
+        Set set2 = collection as Set
+        List list = collection as List
+        String path = collection.asPath
+        File file = collection.singleFile
+
+        // Add and subtract collections
+        def union = collection + layout.files('src/file2.txt')
+        def difference = collection - layout.files('src/file2.txt')
+    }
+}
+
+// 筛选文件集合
+tasks.register('list3') {
+    doLast {
+        FileCollection textFiles = collection.filter { File f ->
+            f.name.endsWith(".txt")
+        }
+    }
+}

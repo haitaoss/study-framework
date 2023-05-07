@@ -1,0 +1,11 @@
+// gradle -PbuildProfile=task-create a -q
+
+// 添加任务时的监听
+tasks.whenTaskAdded { task ->
+    // 为所有任务设置特定属性
+    task.ext.srcDir = 'src/main/java'
+}
+
+tasks.register('a')
+
+println "source dir is $a.srcDir"

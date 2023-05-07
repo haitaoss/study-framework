@@ -1,0 +1,6 @@
+// 清理构建
+plugins {
+    id 'java'
+}
+// gradle compileJava
+// gradle clean -q

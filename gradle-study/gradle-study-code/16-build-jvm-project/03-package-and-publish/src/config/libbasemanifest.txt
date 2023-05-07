@@ -1,0 +1,5 @@
+Created-By: Apache Ant 1.5.1
+Name: javax/mail/Address.class
+Digest-Algorithms: SHA MD5
+SHA-Digest: AjR7RqnN//cdYGouxbd06mSVfI4=
+MD5-Digest: ZnTIQ2aQAtSNIOWXI1pQpw==

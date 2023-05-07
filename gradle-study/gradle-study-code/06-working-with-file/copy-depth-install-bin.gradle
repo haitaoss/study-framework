@@ -1,0 +1,7 @@
+// 复制"安装可执行文件
+tasks.register("installExecutable", Copy) {
+    from "build/my-binary"
+    into "/usr/local/bin"
+    // `Copy`任务的目标目录中的不可读文件并避免耗时的最新检查
+    doNotTrackState("Installation directory contains unrelated files")
+}

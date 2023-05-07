@@ -1,0 +1,28 @@
+// gradle  javadoc -q
+plugins {
+    id 'java'
+}
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    asciidoclet
+}
+
+dependencies {
+    asciidoclet 'org.asciidoctor:asciidoclet:1.+'
+}
+tasks.register('configureJavadoc') {
+    doLast {
+        javadoc {
+            options.doclet = 'org.asciidoctor.Asciidoclet'
+            options.docletpath = configurations.asciidoclet.files.toList()
+        }
+    }
+}
+
+javadoc {
+    dependsOn configureJavadoc
+}
+

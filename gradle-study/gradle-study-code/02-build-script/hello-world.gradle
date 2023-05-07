@@ -1,0 +1,23 @@
+// 定义任务
+
+// gradle -PbuildProfile=hello-world hello -q
+// gradle -PbuildProfile=hello-world upper -q
+// gradle -PbuildProfile=hello-world count -q
+tasks.register('hello') {
+    doLast {
+        println 'hello world!'
+    }
+}
+
+tasks.register('upper') {
+    doLast {
+        String someString = 'mY_nAmE'
+        println "Original: $someString"
+        println "Upper case: ${someString.toUpperCase()}"
+    }
+}
+tasks.register('count') {
+    doLast {
+        4.times { print "$it " }
+    }
+}
